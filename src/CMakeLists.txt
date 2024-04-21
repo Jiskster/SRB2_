@@ -155,6 +155,10 @@ if (UNIX)
 	target_compile_definitions(SRB2SDL2 PRIVATE -DUNIXCOMMON)
 endif()
 
+if (BSD MATCHES "FreeBSD")
+	target_compile_definitions(SRB2SDL2 PRIVATE -DFREEBSD)
+endif()
+
 if(CMAKE_COMPILER_IS_GNUCC)
 	find_program(OBJCOPY objcopy)
 endif()
@@ -281,7 +285,7 @@ target_compile_options(SRB2SDL2 PRIVATE
 
 		$<$<VERSION_GREATER_EQUAL:$<C_COMPILER_VERSION>,4.5.0>:
 			-Wlogical-op
-			-Wno-error=array-bounds
+			#-Wno-error=array-bounds
 		>
 
 		$<$<VERSION_GREATER_EQUAL:$<C_COMPILER_VERSION>,4.6.0>:
@@ -379,6 +383,11 @@ if(SRB2_CONFIG_MOBJCONSISTANCY)
 endif()
 if(SRB2_CONFIG_PACKETDROP)
 	target_compile_definitions(SRB2SDL2 PRIVATE -DPACKETDROP)
+endif()
+if(SRB2_CONFIG_EXECINFO)
+else()
+	target_compile_definitions(SRB2SDL2 PRIVATE -DNOEXECINFO)
+	message(STATUS "You have disabled stack trace dump support")
 endif()
 if(SRB2_CONFIG_ZDEBUG)
 	target_compile_definitions(SRB2SDL2 PRIVATE -DZDEBUG)
